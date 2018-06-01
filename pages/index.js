@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import Head from "next/head";
 import { Person } from "./person";
 import {
   Button,
@@ -87,6 +88,9 @@ export default class Index extends Component {
 
     return (
       <div>
+        <Head>
+          <title>Starwars Collection</title>
+        </Head>
         <Segment style={{ borderRadius: 0 }}>
           <Header as="h1" content="Welcome, Commander" textAlign="center" />
           <Header
@@ -114,7 +118,7 @@ export default class Index extends Component {
             <Grid.Row columns={2} stretched>
               <Grid.Column textAlign="center">
                 <Container>
-                  <Segment textAlign="center" style={{ height: 425 }}>
+                  <Segment textAlign="center">
                     <Header
                       as="h1"
                       content={`Currently page ${
