@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import Person from "./person";
-import CharacterList from "./home";
+import { Person } from "./person";
 import {
   Button,
   Container,
@@ -38,7 +37,8 @@ export default class Index extends Component {
   componentWillMount() {
     let currentState = {
       ...this.props,
-      selectedPerson: "https://swapi.co/api/people/1/",
+      selectedPersonId: "https://swapi.co/api/people/1/",
+      selectedPersonObject: {},
       activePage: 1
     };
     this.setState(currentState);
@@ -47,17 +47,47 @@ export default class Index extends Component {
   handlePageChange(event, data) {
     let { activePage } = data;
     // console.log("< from index.js activePage: ", activePage);
-    this.setState({ ...this.state, activePage });
+    let newUrl = "https://swapi.co/api/people/?page=" + activePage;
+    let response = this.fetchNewData(newUrl);
+    Promise.resolve(response).then(results => {
+      this.setState({
+        ...this.state,
+        res: results.data,
+        activePage
+      });
+    });
+  }
+
+  async fetchNewData(url) {
+    let response = await axios({ method: "GET", url }).catch(e =>
+      console.log(e)
+    );
+    return response;
+  }
+
+  handlePersonChange(event, data) {
+    let { url, children, person } = data;
+    this.setState({
+      ...this.state,
+      selectedPersonId: url,
+      selectedPersonObject: person
+    });
   }
 
   render() {
-    let { res, selectedPerson, activePage } = this.state;
+    let {
+      res,
+      selectedPersonId,
+      activePage,
+      selectedPersonObject
+    } = this.state;
     // console.log("< from index.js: ", activePage);
     let { count, next, previous, results } = res;
+    let totalPage = Math.ceil(count / 10);
 
     return (
       <div>
-        <Segment>
+        <Segment style={{ borderRadius: 0 }}>
           <Header as="h1" content="Welcome, Commander" textAlign="center" />
           <Header
             as="h4"
@@ -65,29 +95,61 @@ export default class Index extends Component {
             textAlign="center"
           />
           <Divider />
-          <Grid>
+          <Grid stackable>
             <Grid.Row textAlign="center">
               <Grid.Column textAlign="center">
+                <Header as="h2" textAlign="center">
+                  Character list ({count})
+                </Header>
                 <Pagination
-                  defaultActivePage={1}
-                  totalPages={Math.ceil(count / 10)}
+                  activePage={activePage}
+                  totalPages={totalPage}
                   onPageChange={(event, data) => {
                     this.handlePageChange(event, data);
                   }}
                 />
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={2}>
-              <Grid.Column floated="left">
-                <CharacterList
-                  res={res}
-                  selectedPerson={selectedPerson}
-                  activePage={activePage}
-                />
-              </Grid.Column>
-              <Grid.Column floated="right">
+
+            <Grid.Row columns={2} stretched>
+              <Grid.Column textAlign="center">
                 <Container>
-                  <Person id={selectedPerson} person={{ name: "me" }} />
+                  <Segment textAlign="center" style={{ height: 425 }}>
+                    <Header
+                      as="h1"
+                      content={`Currently page ${
+                        this.state.activePage
+                      } out of ${totalPage}`}
+                    />
+
+                    <List link>
+                      {results.map((person, i) => {
+                        return (
+                          <List.Item
+                            key={i}
+                            href="#"
+                            url={person.url}
+                            person={person}
+                            onClick={(event, data) => {
+                              this.handlePersonChange(event, data);
+                            }}
+                          >
+                            {person.name}
+                          </List.Item>
+                        );
+                      })}
+                    </List>
+                  </Segment>
+                </Container>
+              </Grid.Column>
+              <Grid.Column>
+                <Container>
+                  <Segment textAlign="left" style={{ height: "650" }}>
+                    <Person
+                      id={selectedPersonId}
+                      person={selectedPersonObject}
+                    />
+                  </Segment>
                 </Container>
               </Grid.Column>
             </Grid.Row>
