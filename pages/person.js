@@ -20,19 +20,20 @@ import {
 export default class Person extends Component {
   static async getInitialProps({ id, person }) {
     // User's id is the url
-    return {};
+    return { id, person };
   }
 
   state = {};
 
   componentWillMount() {
-    this.state = this.props;
+    // console.log(this.props);
+    this.setState(this.props);
   }
   render() {
     let {} = this.state;
     return (
       <div>
-        <Segment>
+        <Segment textAlign="center">
           <Header as="h1" />
         </Segment>
       </div>
