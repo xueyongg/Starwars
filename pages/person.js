@@ -19,6 +19,7 @@ import {
 
 export default class Person extends Component {
   static async getInitialProps({ id, person }) {
+    // User's id is the url
     return {};
   }
 

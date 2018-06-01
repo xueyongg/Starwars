@@ -19,7 +19,15 @@ import {
 const axios = require("axios");
 
 export default class Person extends Component {
-  static async getInitialProps({ id, person }) {
+  static async getInitialProps({}) {
+    const url = "https://swapi.co/api/people"; // Get total number of people in starwars
+    axios({ url })
+      .then(result => {
+        if (result !== "404 error") {
+        }
+      })
+      .catch(e => console.log(e));
+
     // call the api to get all data
     // return the data as props. Add those props into state to be rendered through iteration.
     // See if you can get a transition to display those profiles in a seperate segment, parallal to the main page
