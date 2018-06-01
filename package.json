@@ -1,0 +1,26 @@
+{
+  "name": "bambu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xueyongg/Starwars.git"
+  },
+  "author": "Phua Xue Yong Joshua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xueyongg/Starwars/issues"
+  },
+  "homepage": "https://github.com/xueyongg/Starwars#readme",
+  "dependencies": {
+    "@zeit/next-css": "^0.2.0",
+    "next": "^6.0.3",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "semantic-ui-react": "^0.80.2"
+  }
+}
