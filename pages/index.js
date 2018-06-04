@@ -162,25 +162,23 @@ export default class Index extends Component {
                           </Dimmer>
                         </Segment>
                       ) : (
-                        <div>
-                          <List link>
-                            {results.map((person, i) => {
-                              return (
-                                <List.Item
-                                  key={i}
-                                  href="#"
-                                  url={person.url}
-                                  person={person}
-                                  onClick={(event, data) => {
-                                    this.handlePersonChange(event, data);
-                                  }}
-                                >
-                                  {person.name}
-                                </List.Item>
-                              );
-                            })}
-                          </List>
-                        </div>
+                        <List link>
+                          {results.map((person, i) => {
+                            return (
+                              <List.Item
+                                key={i}
+                                href="#"
+                                url={person.url}
+                                person={person}
+                                onClick={(event, data) => {
+                                  this.handlePersonChange(event, data);
+                                }}
+                              >
+                                {person.name}
+                              </List.Item>
+                            );
+                          })}
+                        </List>
                       )}
                     </Segment>
                   </Container>

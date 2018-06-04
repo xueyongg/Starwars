@@ -17,6 +17,7 @@ import {
   Progress,
   Card
 } from "semantic-ui-react";
+import Link from "next/link";
 
 export const Person = ({ id, person }) => {
   return (
@@ -30,10 +31,24 @@ export const Person = ({ id, person }) => {
               let returnValue;
               if (Array.isArray(value)) {
                 returnValue = value.map((v, i) => {
-                  return <p>{v}</p>;
+                  if (v.includes("http"))
+                    // Return a link with <a> tag
+                    return (
+                      <Link href={v} passHref key={i} target={"_blank"}>
+                        <List.Item>{v}</List.Item>
+                      </Link>
+                    );
+                  else return <List.Item>{v}</List.Item>;
                 });
+                returnValue = <List.List>{returnValue}</List.List>;
               } else {
-                returnValue = person[key.toString()];
+                if (value.includes("http"))
+                  returnValue = (
+                    <Link href={value} passHref>
+                      <a>{value}</a>
+                    </Link>
+                  );
+                else returnValue = value;
               }
               return (
                 <List.Item key={i}>
