@@ -17,7 +17,9 @@ import {
   Sidebar,
   Visibility,
   Progress,
-  Pagination
+  Pagination,
+  Dimmer,
+  Loader
 } from "semantic-ui-react";
 const axios = require("axios");
 
@@ -40,7 +42,8 @@ export default class Index extends Component {
       ...this.props,
       selectedPersonId: "https://swapi.co/api/people/1/",
       selectedPersonObject: {},
-      activePage: 1
+      activePage: 1,
+      loading: false
     };
     this.setState(currentState);
   }
@@ -49,17 +52,18 @@ export default class Index extends Component {
     let { activePage } = data;
     // console.log("< from index.js activePage: ", activePage);
     let newUrl = "https://swapi.co/api/people/?page=" + activePage;
-    let response = this.fetchNewData(newUrl);
+    let response = this.fetchNewData(newUrl, activePage);
     Promise.resolve(response).then(results => {
       this.setState({
         ...this.state,
         res: results.data,
-        activePage
+        loading: false
       });
     });
   }
 
-  async fetchNewData(url) {
+  async fetchNewData(url, activePage) {
+    this.setState({ loading: true, activePage });
     let response = await axios({ method: "GET", url }).catch(e =>
       console.log(e)
     );
@@ -80,7 +84,8 @@ export default class Index extends Component {
       res,
       selectedPersonId,
       activePage,
-      selectedPersonObject
+      selectedPersonObject,
+      loading
     } = this.state;
     // console.log("< from index.js: ", activePage);
     let { count, next, previous, results } = res;
@@ -125,24 +130,34 @@ export default class Index extends Component {
                         this.state.activePage
                       } out of ${totalPage}`}
                     />
-
-                    <List link>
-                      {results.map((person, i) => {
-                        return (
-                          <List.Item
-                            key={i}
-                            href="#"
-                            url={person.url}
-                            person={person}
-                            onClick={(event, data) => {
-                              this.handlePersonChange(event, data);
-                            }}
-                          >
-                            {person.name}
-                          </List.Item>
-                        );
-                      })}
-                    </List>
+                    {loading ? (
+                      <Segment style={{ padding: "1em 0em 0em 0em" }}>
+                        <Header as="h2" content="Loading" />
+                        <Dimmer active inverted>
+                          <Loader size="small" />
+                        </Dimmer>
+                      </Segment>
+                    ) : (
+                      <div>
+                        <List link>
+                          {results.map((person, i) => {
+                            return (
+                              <List.Item
+                                key={i}
+                                href="#"
+                                url={person.url}
+                                person={person}
+                                onClick={(event, data) => {
+                                  this.handlePersonChange(event, data);
+                                }}
+                              >
+                                {person.name}
+                              </List.Item>
+                            );
+                          })}
+                        </List>
+                      </div>
+                    )}
                   </Segment>
                 </Container>
               </Grid.Column>
