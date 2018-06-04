@@ -34,7 +34,7 @@ export const Person = ({ id, person }) => {
                   if (v.includes("http"))
                     // Return a link with <a> tag
                     return (
-                      <Link href={v} passHref key={i} target={"_blank"}>
+                      <Link href={v} passHref key={i} >
                         <List.Item>{v}</List.Item>
                       </Link>
                     );
