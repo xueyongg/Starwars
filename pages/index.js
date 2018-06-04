@@ -119,7 +119,9 @@ export default class Index extends Component {
                       <Header as="h2" icon inverted>
                         <Icon name="exclamation circle" />
                         An error occured
-                        <Header.Subheader>Unable to load from swapi.co</Header.Subheader>
+                        <Header.Subheader>
+                          Unable to load from swapi.co
+                        </Header.Subheader>
                       </Header>
                     </Dimmer>
                   </Dimmer.Dimmable>
