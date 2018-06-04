@@ -21,6 +21,7 @@ import {
   Dimmer,
   Loader
 } from "semantic-ui-react";
+import { isNull } from "util";
 const axios = require("axios");
 
 export default class Index extends Component {
@@ -29,7 +30,7 @@ export default class Index extends Component {
     let response = await axios({ method: "GET", url }).catch(e =>
       console.log(e)
     );
-    return { res: response.data };
+    return { res: response ? response.data : null };
     // call the api to get all data
     // return the data as props. Add those props into state to be rendered through iteration.
     // See if you can get a transition to display those profiles in a seperate segment, parallal to the main page
@@ -87,8 +88,8 @@ export default class Index extends Component {
       selectedPersonObject,
       loading
     } = this.state;
-    // console.log("< from index.js: ", activePage);
-    let { count, next, previous, results } = res;
+    let { count, next, previous, results } = res || {};
+    let errorOccured = isNull(res);
     let totalPage = Math.ceil(count / 10);
 
     return (
@@ -100,79 +101,101 @@ export default class Index extends Component {
           <Header as="h1" content="Welcome, Commander" textAlign="center" />
           <Header
             as="h4"
-            content="What do you wish to find out?"
+            content={
+              errorOccured
+                ? "Help me. I've encountered an error."
+                : "What do you wish to find out?"
+            }
             textAlign="center"
           />
           <Divider />
-          <Grid stackable>
-            <Grid.Row textAlign="center">
-              <Grid.Column textAlign="center">
-                <Header as="h2" textAlign="center">
-                  Character list ({count})
-                </Header>
-                <Pagination
-                  activePage={activePage}
-                  totalPages={totalPage}
-                  onPageChange={(event, data) => {
-                    this.handlePageChange(event, data);
-                  }}
-                />
-              </Grid.Column>
-            </Grid.Row>
 
-            <Grid.Row columns={2} stretched>
-              <Grid.Column textAlign="center">
-                <Container>
-                  <Segment textAlign="center">
-                    <Header
-                      as="h1"
-                      content={`Currently page ${
-                        this.state.activePage
-                      } out of ${totalPage}`}
-                    />
-                    {loading ? (
-                      <Segment style={{ padding: "1em 0em 0em 0em" }}>
-                        <Header as="h2" content="Loading" />
-                        <Dimmer active inverted>
-                          <Loader size="small" />
-                        </Dimmer>
-                      </Segment>
-                    ) : (
-                      <div>
-                        <List link>
-                          {results.map((person, i) => {
-                            return (
-                              <List.Item
-                                key={i}
-                                href="#"
-                                url={person.url}
-                                person={person}
-                                onClick={(event, data) => {
-                                  this.handlePersonChange(event, data);
-                                }}
-                              >
-                                {person.name}
-                              </List.Item>
-                            );
-                          })}
-                        </List>
-                      </div>
-                    )}
-                  </Segment>
+          {errorOccured ? (
+            <div>
+              <Grid>
+                <Container style={{ width: "100%" }}>
+                  <Dimmer.Dimmable as={Segment} dimmed style={{ height: 300 }}>
+                    <Dimmer active>
+                      <Header as="h2" icon inverted>
+                        <Icon name="exclamation circle" />
+                        An error occured
+                        <Header.Subheader>Unable to load from swapi.co</Header.Subheader>
+                      </Header>
+                    </Dimmer>
+                  </Dimmer.Dimmable>
                 </Container>
-              </Grid.Column>
-              <Grid.Column>
-                <Container>
-                  <Segment textAlign="left" style={{ height: "650" }}>
-                    <Person
-                      id={selectedPersonId}
-                      person={selectedPersonObject}
-                    />
-                  </Segment>
-                </Container>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+              </Grid>
+            </div>
+          ) : (
+            <Grid stackable>
+              <Grid.Row textAlign="center">
+                <Grid.Column textAlign="center">
+                  <Header as="h2" textAlign="center">
+                    Character list ({count})
+                  </Header>
+                  <Pagination
+                    activePage={activePage}
+                    totalPages={totalPage}
+                    onPageChange={(event, data) => {
+                      this.handlePageChange(event, data);
+                    }}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row columns={2} stretched>
+                <Grid.Column textAlign="center">
+                  <Container>
+                    <Segment textAlign="center">
+                      <Header
+                        as="h1"
+                        content={`Currently page ${
+                          this.state.activePage
+                        } out of ${totalPage}`}
+                      />
+                      {loading ? (
+                        <Segment style={{ padding: "1em 0em 0em 0em" }}>
+                          <Header as="h2" content="Loading" />
+                          <Dimmer active inverted>
+                            <Loader size="small" />
+                          </Dimmer>
+                        </Segment>
+                      ) : (
+                        <div>
+                          <List link>
+                            {results.map((person, i) => {
+                              return (
+                                <List.Item
+                                  key={i}
+                                  href="#"
+                                  url={person.url}
+                                  person={person}
+                                  onClick={(event, data) => {
+                                    this.handlePersonChange(event, data);
+                                  }}
+                                >
+                                  {person.name}
+                                </List.Item>
+                              );
+                            })}
+                          </List>
+                        </div>
+                      )}
+                    </Segment>
+                  </Container>
+                </Grid.Column>
+                <Grid.Column>
+                  <Container>
+                    <Segment textAlign="left" style={{ height: "650" }}>
+                      <Person
+                        id={selectedPersonId}
+                        person={selectedPersonObject}
+                      />
+                    </Segment>
+                  </Container>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          )}
         </Segment>
       </div>
     );
