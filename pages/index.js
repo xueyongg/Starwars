@@ -27,9 +27,9 @@ const axios = require("axios");
 export default class Index extends Component {
   static async getInitialProps({ res }) {
     const url = "https://swapi.co/api/people"; // Get total number of people in starwars
-    let response = await axios({ method: "GET", url }).catch(e =>
-      console.log(e)
-    );
+    let response = await axios({ method: "GET", url }).catch(e => {
+      throw e;
+    });
     return { res: response ? response.data : null };
     // call the api to get all data
     // return the data as props. Add those props into state to be rendered through iteration.
@@ -65,9 +65,9 @@ export default class Index extends Component {
 
   async fetchNewData(url, activePage) {
     this.setState({ loading: true, activePage });
-    let response = await axios({ method: "GET", url }).catch(e =>
-      console.log(e)
-    );
+    let response = await axios({ method: "GET", url }).catch(e => {
+      throw e;
+    });
     return response;
   }
 

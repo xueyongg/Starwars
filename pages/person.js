@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
 import {
   Button,
   Container,
@@ -34,7 +32,7 @@ export const Person = ({ id, person }) => {
                   if (v.includes("http"))
                     // Return a link with <a> tag
                     return (
-                      <Link href={v} passHref key={i} >
+                      <Link href={v} passHref key={i}>
                         <List.Item>{v}</List.Item>
                       </Link>
                     );
