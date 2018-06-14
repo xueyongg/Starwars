@@ -1,22 +1,15 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Head from "next/head";
-import { Person } from "./person";
+import PersonComponent from "./person";
 import {
-  Button,
   Container,
   Divider,
   Grid,
   Header,
   Icon,
-  Image,
   List,
-  Menu,
-  Responsive,
   Segment,
-  Sidebar,
-  Visibility,
-  Progress,
   Pagination,
   Dimmer,
   Loader
@@ -186,7 +179,7 @@ export default class Index extends Component {
                 <Grid.Column>
                   <Container>
                     <Segment textAlign="left" style={{ height: "650" }}>
-                      <Person
+                      <PersonComponent
                         id={selectedPersonId}
                         person={selectedPersonObject}
                       />
